@@ -1,0 +1,330 @@
+﻿@model HMS.Models.Reservation
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<!-- Revolution Slider -->
+<style>
+    .mySlides {
+        display: none;
+    }
+</style>
+<h2 class="w3-center">A View of Star Hotel</h2>
+
+<div class="w3-content w3-section" style="max-width:initial">
+    <div class="mySlides">
+        <img src="~/images/slides/slide-bg.jpg" style="width:100%">
+
+    </div>
+    <div class="mySlides">
+        
+        <img src="~/images/slides/slide-bg-02.jpg" style="width:100%">
+        
+    </div>
+   
+   
+</div>
+<script>
+var myIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}
+    x[myIndex-1].style.display = "block";
+    setTimeout(carousel, 5000); // Change image every 2 seconds
+}
+
+function carousel2() {
+    var i;
+    var x = document.getElementsByClassName("slide2");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) { myIndex = 1 }
+    x[myIndex - 1].style.display = "block";
+    setTimeout(carousel2, 3000); // Change image every 2 seconds
+}
+</script>
+
+
+
+
+<br>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<!-- Reservation form -->
+<section id="reservation-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline reservation-horizontal clearfix" }))
+{
+
+            @Html.AntiForgeryToken()
+            <!-- Error message -->
+                    <div id="message"></div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="email" accesskey="E">E-mail</label>
+                                <input name="email" type="text" id="email" value="" class="form-control" placeholder="Please enter your E-mail" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="room">Room Type</label>
+                                <div class="popover-icon" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."> <i class="fa fa-info-circle fa-lg"> </i> </div>
+                                <select class="form-control" name="room" id="room" required>
+                                    <option selected="selected" disabled="disabled">Select a room</option>
+                                    <option value="Single">Single room</option>
+                                    <option value="Double">Double Room</option>
+                                    <option value="Deluxe">Deluxe room</option>
+                                    <option value="King Size Bedroom">King Size Bedroom</option>
+                                    <option value="Jungle View">Jungle View</option>
+                                    <option value="Special Spa Room">Special Spa Room</option>
+                                    <option value="Business Class">Business Class</option>
+                                    <option value="Honeymoon Suit">Honeymoon Suit</option>
+                                    <option value="Family Room">Family Room</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="checkin">Check-in</label>
+                                <div class="popover-icon" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Check-In is from 11:00"> <i class="fa fa-info-circle fa-lg"> </i> </div>
+                                <i class="fa fa-calendar infield"></i>
+                                <input name="checkin" type="date" id="checkin" value="" class="form-control" placeholder="Check-in" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="checkout">Check-out</label>
+                                <div class="popover-icon" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Check-out is from 12:00"> <i class="fa fa-info-circle fa-lg"> </i> </div>
+                                <i class="fa fa-calendar infield"></i>
+                                <input name="checkout" type="date" id="checkout" value="" class="form-control" placeholder="Check-out" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                <label for="guests" accesskey="N">Guests</label>
+                                <input name="guests" type="number" id="guests" value="" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary btn-block" id="reserve">Book Now</button>
+                        </div>
+                    </div>
+                    <div id="loader" style="text-align:center;display:none">
+                       <h3>Loading...</h3>
+
+
+                    </div>
+                    <h3 style="color:lightgreen;display:none" id="msg">You Have Successfully Reserved a Room</h3>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#reserve").click(function () {
+            $("#loader").show();
+            var data = $(".form-inline reservation-horizontal clearfix").serialize();
+            $.ajax({
+        type: "POST",
+                url: "Create",
+                data: data,
+                success: function (response) {
+                    $("#loader").hide();
+                    // alert("Data is added to db");
+                    $("#msg").show();
+
+            }
+        })
+
+
+
+        });
+
+
+});
+
+
+</script>
+
+<!-- Rooms -->
+<section class="rooms mt50">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="lined-heading"><span>Guests Favorite Rooms</span></h2>
+            </div>
+            <!-- Room -->
+            <div class="col-sm-4">
+                <div class="room-thumb">
+                    <img src="~/images/rooms/room-01.jpg" alt="room 1" class="img-responsive" />
+                    <div class="mask">
+                        <div class="main">
+                            <h5>Double bedroom</h5>
+                            <div class="price">Rs 10000<span>a night</span></div>
+                        </div>
+                        <div class="content">
+                            <p>
+                                <span>A modern hotel room in Star Hotel</span> Nunc tempor erat in magna pulvinar fermentum. Pellentesque scelerisque at leo nec vestibulum.
+                                malesuada metus.
+                            </p>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Private balcony</li>
+                                        <li><i class="fa fa-check-circle"></i> Sea view</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Free Wi-Fi</li>
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Bathroom</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            @Html.ActionLink("Reserve Now", "RoomReserve", "Home", new { @class= "btn btn-primary btn-block" })
+                            @*<a href="room-detail.html" class="btn btn-primary btn-block">Read More</a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Room -->
+            <div class="col-sm-4">
+                <div class="room-thumb">
+                    <img src="~/images/rooms/room-02.jpg" alt="room 2" class="img-responsive" />
+                    <div class="mask">
+                        <div class="main">
+                            <h5>King Size Bedroom </h5>
+                            <div class="price">Rs 14900<span>a night</span></div>
+                        </div>
+                        <div class="content">
+                            <p>
+                                <span>A modern hotel room in Star Hotel</span> Nunc tempor erat in magna pulvinar fermentum. Pellentesque scelerisque at leo nec vestibulum.
+                                malesuada metus.
+                            </p>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Private balcony</li>
+                                        <li><i class="fa fa-check-circle"></i> Sea view</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Free Wi-Fi</li>
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Bathroom</li>
+                                    </ul>
+                                </div>
+                            </div>
+                           @Html.ActionLink("Reserve Now", "RoomReserve", "Home", new { @class = "btn btn-primary btn-block" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Room -->
+            <div class="col-sm-4">
+                <div class="room-thumb">
+                    <img src="~/images/rooms/room-03.jpg" alt="room 3" class="img-responsive" />
+                    <div class="mask">
+                        <div class="main">
+                            <h5>Single room</h5>
+                            <div class="price">Rs 12000<span>a night</span></div>
+                        </div>
+                        <div class="content">
+                            <p>
+                                <span>A modern hotel room in Star Hotel</span> Nunc tempor erat in magna pulvinar fermentum. Pellentesque scelerisque at leo nec vestibulum.
+                                malesuada metus.
+                            </p>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Private balcony</li>
+                                        <li><i class="fa fa-check-circle"></i> Sea view</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-check-circle"></i> Free Wi-Fi</li>
+                                        <li><i class="fa fa-check-circle"></i> Incl. breakfast</li>
+                                        <li><i class="fa fa-check-circle"></i> Bathroom</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            @Html.ActionLink("Reserve Now", "RoomReserve", "Home", new { @class = "btn btn-primary btn-block" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- USP's -->
+
+
+<!-- Parallax Effect -->
+@*<script type="text/javascript">$(document).ready(function(){$('#parallax-image').parallax("50%", -0.35);});</script>
+
+<section class="parallax-effect mt100">
+    <div id="parallax-image" style="background-image: url(~/images/parallax/parallax-01.jpg);">
+        <div class="color-overlay fadeIn appear" data-start="600">
+            <div class="container">
+                <div class="content">
+                    <h3 class="text-center"><i class="fa fa fa-star-o"></i> STARHOTEL</h3>
+                    <p class="text-center">
+                        An Exceptional Hotel Template!
+                        <br>
+                        <a href="blog.html" class="btn btn-default btn-lg mt30">Checkout the blog</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>*@
+
+<!-- Gallery -->
+
+@*<section class="gallery-slider mt100">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="lined-heading"><span>Gallery</span></h2>
+            </div>
+        </div>
+    </div>
+   
+    <div id="owl-gallery" class="owl-carousel">
+        <div class="item"><a href="~/images/gallery/1.jpg" data-rel="prettyPhoto[gallery1]"><img src="~/images/gallery/1.jpg" alt="Image 1"><i class="fa fa-search"></i></a></div>
+        <div class="item"><a href="~/images/gallery/2.jpg" data-rel="prettyPhoto[gallery1]"><img src="~/images/gallery/2.jpg" alt="Image 2"><i class="fa fa-search"></i></a></div>
+        <div class="item"><a href="~/images/gallery/3.jpg" data-rel="prettyPhoto[gallery1]"><img src="~/images/gallery/3.jpg" alt="Image 3"><i class="fa fa-search"></i></a></div>
+        <div class="item"><a href="~/images/gallery/4.jpg" data-rel="prettyPhoto[gallery1]"><img src="~/images/gallery/4.jpg" alt="Image 4"><i class="fa fa-search"></i></a></div>
+    </div>
+</section>*@
+
+
+
+

@@ -1,0 +1,80 @@
+﻿@model HMS.Models.Reservation
+
+@{
+    ViewBag.Title = "RoomReserve";
+}
+
+<h2>Room Reserve</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Reservation</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.room, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" name="room" id="room" required>
+                    <option selected="selected" disabled="disabled">Select a room</option>
+                    <option value="Single">Single room</option>
+                    <option value="Double">Double Room</option>
+                    <option value="Deluxe">Deluxe room</option>
+                    <option value="King Size Bedroom">King Size Bedroom</option>
+                    <option value="Jungle View">Jungle View</option>
+                    <option value="Special Spa Room">Special Spa Room</option>
+                    <option value="Business Class">Business Class</option>
+                    <option value="Honeymoon Suit">Honeymoon Suit</option>
+                    <option value="Family Room">Family Room</option>
+
+                </select>
+                @Html.ValidationMessageFor(model => model.room, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.checkin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="checkin" type="date" id="checkin" value="" class="form-control" placeholder="Check-in" required />
+
+                @Html.ValidationMessageFor(model => model.checkin, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.checkout, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="checkout" type="date" id="checkout" value="" class="form-control" placeholder="Check-out" required />
+                @Html.ValidationMessageFor(model => model.checkout, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.guests, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.guests, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.guests, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Reserve" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
